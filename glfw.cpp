@@ -2,6 +2,9 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 unsigned int buffer;
 GLint size;
@@ -10,10 +13,44 @@ float positions[6] = {
 	0.0f, 0.2f,
 	0.2f, -0.2f
 };
+struct ShaderProgramSource{
+	std::string VertexSource;
+	std::string FragmentSource;
+};
+
+
+static ShaderProgramSource ParseShader(const std::string& filepath){
+
+	std::ifstream stream(filepath);
+
+	enum class ShaderType{
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+
+	std::string line;
+	std::stringstream ss[2];
+	ShaderType type = ShaderType::NONE;
+
+	while(getline(stream, line)){
+	
+		if(line.find("#shader") != std::string::npos)
+		{
+			if(line.find("vertex") != std::string::npos) //set mode to vertex
+				type = ShaderType::VERTEX;
+			else if (line.find("fragment") != std::string::npos)   //set mode to fragment
+				type = ShaderType::FRAGMENT;
+		}
+		else
+		{
+			ss[(int)type] << line << '\n';
+		}
+	}
+	return {ss[0].str(), ss[1].str()};
+}
 
 static unsigned int CompileShader(unsigned int type, const std::string& source){
 
-	unsigned int id = glCreateShader(GL_VERTEX_SHADER);
+	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
@@ -83,6 +120,7 @@ int main(void)
 		<< "LEFT ARROW to go left" << std::endl
 		<< "DOWN ATTOW to go dowm\n" << std::endl
 		<< "Press W to scale the triangle" << std::endl
+<<<<<<< HEAD
 		<< "Press S to descale it" << std::endl << "PRESS A or E to shade it" << std::endl;
 
 	/*std::string vertexShader =
@@ -101,6 +139,17 @@ int main(void)
 
 	unsigned int Shader = CreateShader(vertexShader, fragmentShader);
 	glUseProgram(Shader);*/
+=======
+		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" << std::endl << "\n";
+	
+	ShaderProgramSource source = ParseShader("./res/shaders/Basic.shader");
+	std::cout << source.VertexSource << std::endl;
+	std::cout << source.FragmentSource << std::endl;
+	
+	unsigned int Shader = CreateShader(source.VertexSource, source.FragmentSource);
+	glUseProgram(Shader);
+>>>>>>> refs/remotes/origin/master
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -131,6 +180,7 @@ int main(void)
 
 		Sleep(5);
 	}
+	//glDeleteProgram(Shader);
 	glfwTerminate();
 	return 0;
 } 
@@ -190,11 +240,19 @@ void Keytest(GLFWwindow* window){
 		return;
 	}
 
+<<<<<<< HEAD
 	int keyD = glfwGetKey(window, GLFW_KEY_D);
 	int keya = glfwGetKey(window, GLFW_KEY_A);
 
 	if(keyD == GLFW_PRESS or keya == GLFW_PRESS){
 
+=======
+	int keya = glfwGetKey(window, GLFW_KEY_A);
+	int keyD = glfwGetKey(window, GLFW_KEY_D);
+
+	if( keya == GLFW_PRESS or keyD == GLFW_PRESS){
+	
+>>>>>>> refs/remotes/origin/master
 		positions[2] += keyD == k ? 0.024f : -0.024f;
 		Buffered(&buffer);
 		return;
