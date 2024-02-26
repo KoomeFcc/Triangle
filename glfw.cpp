@@ -120,26 +120,6 @@ int main(void)
 		<< "LEFT ARROW to go left" << std::endl
 		<< "DOWN ATTOW to go dowm\n" << std::endl
 		<< "Press W to scale the triangle" << std::endl
-<<<<<<< HEAD
-		<< "Press S to descale it" << std::endl << "PRESS A or E to shade it" << std::endl;
-
-	/*std::string vertexShader =
-		"#version 330 core\n"
-		"layout(location = 0) in vec4 position;\n"
-		"void main(){\n"
-			"gl_Position = position;\n"
-		"}\n";
-
-	std::string fragmentShader = 
-		"#version 330 core\n"
-		"layout(location = 0) out vec4 color;\n"
-		"void main(){\n"
-			"color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-		"}\n";
-
-	unsigned int Shader = CreateShader(vertexShader, fragmentShader);
-	glUseProgram(Shader);*/
-=======
 		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" << std::endl << "\n";
 	
 	ShaderProgramSource source = ParseShader("./res/shaders/Basic.shader");
@@ -148,8 +128,6 @@ int main(void)
 	
 	unsigned int Shader = CreateShader(source.VertexSource, source.FragmentSource);
 	glUseProgram(Shader);
->>>>>>> refs/remotes/origin/master
-
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -240,19 +218,11 @@ void Keytest(GLFWwindow* window){
 		return;
 	}
 
-<<<<<<< HEAD
-	int keyD = glfwGetKey(window, GLFW_KEY_D);
-	int keya = glfwGetKey(window, GLFW_KEY_A);
-
-	if(keyD == GLFW_PRESS or keya == GLFW_PRESS){
-
-=======
 	int keya = glfwGetKey(window, GLFW_KEY_A);
 	int keyD = glfwGetKey(window, GLFW_KEY_D);
 
 	if( keya == GLFW_PRESS or keyD == GLFW_PRESS){
 	
->>>>>>> refs/remotes/origin/master
 		positions[2] += keyD == k ? 0.024f : -0.024f;
 		Buffered(&buffer);
 		return;
