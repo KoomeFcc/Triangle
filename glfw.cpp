@@ -1,9 +1,7 @@
 #include <windows.h>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 #include <iostream>
-
-//#define GLEW_STATIC
 
 unsigned int buffer;
 GLint size;
@@ -85,9 +83,9 @@ int main(void)
 		<< "LEFT ARROW to go left" << std::endl
 		<< "DOWN ATTOW to go dowm\n" << std::endl
 		<< "Press W to scale the triangle" << std::endl
-		<< "Press S to descale it" << std::endl;
+		<< "Press S to descale it" << std::endl << "PRESS A or E to shade it" << std::endl;
 
-	std::string vertexShader =
+	/*std::string vertexShader =
 		"#version 330 core\n"
 		"layout(location = 0) in vec4 position;\n"
 		"void main(){\n"
@@ -102,7 +100,7 @@ int main(void)
 		"}\n";
 
 	unsigned int Shader = CreateShader(vertexShader, fragmentShader);
-	glUseProgram(Shader);
+	glUseProgram(Shader);*/
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -130,6 +128,8 @@ int main(void)
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
+
+		Sleep(5);
 	}
 	glfwTerminate();
 	return 0;
@@ -162,7 +162,7 @@ void Keytest(GLFWwindow* window){
 	
 
 	if (keyu == GLFW_PRESS or keyd == GLFW_PRESS) {
-		for (int i = 1; i < 6; i += 2) positions[i] += keyu == k ? 0.003f : -0.003f;
+		for (int i = 1; i < 6; i += 2) positions[i] += keyu == k ? 0.024f : -0.024f;
 		Buffered(&buffer);
 		return;
 	}
@@ -171,7 +171,7 @@ void Keytest(GLFWwindow* window){
 	int keyl = glfwGetKey(window, GLFW_KEY_LEFT);
 
 	if(keyr == GLFW_PRESS or keyl == GLFW_PRESS){
-		for (int i = 0; i < 6; i += 2) positions[i] += keyr == k ? 0.003f : -0.003f;
+		for (int i = 0; i < 6; i += 2) positions[i] += keyr == k ? 0.024f : -0.024f;
 		Buffered(&buffer);
 		return;
 	}
@@ -183,12 +183,23 @@ void Keytest(GLFWwindow* window){
 
 		for (int i = 0; i < 6; i++){
 			if (positions[i] == 0.0f) continue;
-			if (keyw == k) positions[i] *= 1.003f; 
-			if (keys == k) positions[i] *= 0.997f;
+			if (keyw == k) positions[i] *= 1.024f; 
+			if (keys == k) positions[i] *= 0.976f;
 		}
 		Buffered(&buffer);
 		return;
 	}
+
+	int keyD = glfwGetKey(window, GLFW_KEY_D);
+	int keya = glfwGetKey(window, GLFW_KEY_A);
+
+	if(keyD == GLFW_PRESS or keya == GLFW_PRESS){
+
+		positions[2] += keyD == k ? 0.024f : -0.024f;
+		Buffered(&buffer);
+		return;
+	}
+
 	return;
 }
 
