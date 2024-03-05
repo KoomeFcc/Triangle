@@ -120,11 +120,10 @@ int main(void)
 		<< "LEFT ARROW to go left" << std::endl
 		<< "DOWN ATTOW to go dowm\n" << std::endl
 		<< "Press W to scale the triangle" << std::endl
-		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" << std::endl << "\n";
+		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" 
+		<< "Press A and E to rotate it" << std::endl << "\n";
 	
 	ShaderProgramSource source = ParseShader("./res/shaders/Basic.shader");
-	std::cout << source.VertexSource << std::endl;
-	std::cout << source.FragmentSource << std::endl;
 	
 	unsigned int Shader = CreateShader(source.VertexSource, source.FragmentSource);
 	glUseProgram(Shader);
@@ -134,11 +133,6 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//glBegin(GL_TRIANGLES);
-		//if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
- 		//	Biggertri();
-		//	Buffered(&buffer); 
-		//	Sleep(60);
-		//}
 
 		//glfwSetKeyCallback(window, Keypressed);
 		Keytest(window);
@@ -228,6 +222,29 @@ void Keytest(GLFWwindow* window){
 		return;
 	}
 
+	int keyQ = glfwGetKey(window, GLFW_KEY_Q);
+	int keyE = glfwGetKey(window, GLFW_KEY_E);
+	float a = 0.0f; float b = 0.0f;
+	struct rotaa { float x, y; }; struct rotab { float x, y;};
+	rotaa rota; rotab rotb;
+
+	
+
+	if( keyQ == GLFW_PRESS or keyE == GLFW_PRESS){
+
+		for ( int i = 0; i < 6; i+=2){
+			
+			b = positions[i];
+			a = positions[i + 1];
+			rota.x = (b * 0.9659f) + (a * -0.2588f); rota.y = (b * 0.2588f) + (a * 0.9659f);
+			rotb.x = (b * 0.9659f) + (a * 0.2588f) ; rotb.y = (b * -0.2588f) + (a * 0.9659f);  
+			positions[i] = keyQ == k ? rota.x : rotb.x;
+			positions[i + 1] = keyQ == k ? rota.y : rotb.y;	
+		}
+		Buffered(&buffer);
+		Sleep(3);
+		return;
+	}
 	return;
 }
 
