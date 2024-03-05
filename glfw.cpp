@@ -114,7 +114,7 @@ int main(void)
 	//functions called to buffer
 	Buffered(&buffer);
 	
-	std::cout << "To movo the triangle:" << std::endl
+	std::cout << "To move the triangle:" << std::endl
 		<< "UP ARROW to go up" << std::endl
 		<< "RIGHT ARROW to go right" << std::endl
 		<< "LEFT ARROW to go left" << std::endl
