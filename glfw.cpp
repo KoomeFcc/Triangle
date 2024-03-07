@@ -1,9 +1,10 @@
+#include <windows.h>
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <fstream>
+#include <fstream>	
 
 unsigned int buffer;
 GLint size;
@@ -16,7 +17,6 @@ struct ShaderProgramSource{
 	std::string VertexSource;
 	std::string FragmentSource;
 };
-
 
 static ShaderProgramSource ParseShader(const std::string& filepath){
 
