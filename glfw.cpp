@@ -7,12 +7,22 @@
 #include <fstream>	
 
 unsigned int buffer;
+unsigned int ibo;
 GLint size;
-float positions[6] = {
-	-0.2f, -0.2f,
-	0.0f, 0.2f,
-	0.2f, -0.2f
+GLint sizeibo;
+float positions[12] = {
+	-0.5f, -0.5f,
+	0.5f, -0.5f,
+	0.5f, 0.5f,
+
+	-0.5f, 0.5f
 };
+
+unsigned int indices[] = {
+	0, 1, 2,
+	2, 3, 0
+};
+
 struct ShaderProgramSource{
 	std::string VertexSource;
 	std::string FragmentSource;
@@ -87,7 +97,7 @@ static int CreateShader(const std::string& vertexShader, const std::string& frag
 }
 
 void Keypressed(GLFWwindow* window, int key, int scancode, int action, int mods);
-void Buffered(unsigned int *buffer);
+void Buffered(unsigned int *buffer, unsigned int *ibo);
 void Keytest(GLFWwindow* window);
 
 int main(void)
@@ -97,7 +107,7 @@ int main(void)
 	if (!glfwInit())
 		return -1;	
 	
-	window = glfwCreateWindow(1024, 768, "new test window", NULL, NULL);
+	window = glfwCreateWindow(640, 480, "new test window", NULL, NULL);
 
 	if (!window)
 	{
@@ -111,15 +121,12 @@ int main(void)
 		std::cout << "Error" << std::endl;	
 
 	//functions called to buffer
-	Buffered(&buffer);
+	Buffered(&buffer, &ibo);
 	
-	std::cout << "To move the triangle:" << std::endl
-		<< "UP ARROW to go up" << std::endl
-		<< "RIGHT ARROW to go right" << std::endl
-		<< "LEFT ARROW to go left" << std::endl
-		<< "DOWN ATTOW to go dowm\n" << std::endl
-		<< "Press W to scale the triangle" << std::endl
-		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" 
+	std::cout << "To move the triangle:" << std::endl << "UP ARROW to go up" << std::endl
+		<< "RIGHT ARROW to go right" << std::endl << "LEFT ARROW to go left" << std::endl
+		<< "DOWN ATTOW to go dowm\n" << std::endl << "Press W to scale the triangle" << std::endl
+		<< "Press S to descale it" << std::endl << "PRESS A or D to shade it" << std::endl
 		<< "Press A and E to rotate it" << std::endl << "\n";
 	
 	ShaderProgramSource source = ParseShader("./res/shaders/Basic.shader");
@@ -136,9 +143,9 @@ int main(void)
 		//glfwSetKeyCallback(window, Keypressed);
 		Keytest(window);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
 	
-		//glDrawElements(GL_TRIANGLES, 3, GL_ARRAY_BUFFER, NULL);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		//glVertex2f(-0.5f, -0.5f);
 		//glVertex2f(0.0f, 0.5f);
 		//glVertex2f(0.5f, -0.5f);
@@ -156,20 +163,28 @@ int main(void)
 	return 0;
 } 
 
-void Buffered(unsigned int *buffer) {
+void Buffered(unsigned int *buffer, unsigned int *ibo) {
 
-	size = 0;
+	size = 0; sizeibo = 0;
 	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &sizeibo);
 
-	if((6 * sizeof(float)) == size){
-			glDeleteBuffers(1, buffer);
-		}
+	if((6 * 2 * sizeof(float)) == size){
+		glDeleteBuffers(1, buffer);
+	}
+	if(6 * sizeof(unsigned int) == sizeibo){
+		glDeleteBuffers(1, ibo);	
+	}
 
-	glGenBuffers(1, buffer);
+	glGenBuffers(1, buffer); 
 	glBindBuffer(GL_ARRAY_BUFFER, *buffer); //Bind elements to be drawm
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW); 
+
+	glGenBuffers(1, ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 
 	return;
@@ -183,8 +198,8 @@ void Keytest(GLFWwindow* window){
 	
 
 	if (keyu == GLFW_PRESS or keyd == GLFW_PRESS) {
-		for (int i = 1; i < 6; i += 2) positions[i] += keyu == k ? 0.024f : -0.024f;
-		Buffered(&buffer);
+		for (int i = 1; i < 12; i += 2) positions[i] += keyu == k ? 0.024f : -0.024f;
+		Buffered(&buffer, &ibo);
 		return;
 	}
 
@@ -192,8 +207,8 @@ void Keytest(GLFWwindow* window){
 	int keyl = glfwGetKey(window, GLFW_KEY_LEFT);
 
 	if(keyr == GLFW_PRESS or keyl == GLFW_PRESS){
-		for (int i = 0; i < 6; i += 2) positions[i] += keyr == k ? 0.024f : -0.024f;
-		Buffered(&buffer);
+		for (int i = 0; i < 12; i += 2) positions[i] += keyr == k ? 0.024f : -0.024f;
+		Buffered(&buffer, &ibo);
 		return;
 	}
 
@@ -202,12 +217,12 @@ void Keytest(GLFWwindow* window){
 
 	if( keyw == GLFW_PRESS or keys == GLFW_PRESS){
 
-		for (int i = 0; i < 6; i++){
+		for (int i = 0; i < 12; i++){
 			if (positions[i] == 0.0f) continue;
 			if (keyw == k) positions[i] *= 1.024f; 
 			if (keys == k) positions[i] *= 0.976f;
 		}
-		Buffered(&buffer);
+		Buffered(&buffer, &ibo);
 		return;
 	}
 
@@ -217,7 +232,7 @@ void Keytest(GLFWwindow* window){
 	if( keya == GLFW_PRESS or keyD == GLFW_PRESS){
 	
 		positions[2] += keyD == k ? 0.024f : -0.024f;
-		Buffered(&buffer);
+		Buffered(&buffer, &ibo);
 		return;
 	}
 
@@ -231,7 +246,7 @@ void Keytest(GLFWwindow* window){
 
 	if( keyQ == GLFW_PRESS or keyE == GLFW_PRESS){
 
-		for ( int i = 0; i < 6; i+=2){
+		for ( int i = 0; i < 12; i+=2){
 			
 			b = positions[i];
 			a = positions[i + 1];
@@ -240,7 +255,7 @@ void Keytest(GLFWwindow* window){
 			positions[i] = keyQ == k ? rota.x : rotb.x;
 			positions[i + 1] = keyQ == k ? rota.y : rotb.y;	
 		}
-		Buffered(&buffer);
+		Buffered(&buffer, &ibo);
 		Sleep(3);
 		return;
 	}
