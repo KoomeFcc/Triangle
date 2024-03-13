@@ -6,28 +6,15 @@ float positions[12] = {
 	0.5f, 0.5f,
 	-0.5f, 0.5f
 };
-unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 }; unsigned int buffer; unsigned int ibo;
+unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 }; //unsigned int buffer; unsigned int ibo;
 
 void Buffered(unsigned int *buffer, unsigned int *ibo) {
 
-	GLint size = 0; GLint sizeibo = 0; 
-	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &sizeibo);
-
-	if((6 * 2 * sizeof(float)) == size){
-		glDeleteBuffers(1, buffer);
-	}
-	if(6 * sizeof(unsigned int) == sizeibo){
-		glDeleteBuffers(1, ibo);	
-	}
-
-	glGenBuffers(1, buffer); 
 	glBindBuffer(GL_ARRAY_BUFFER, *buffer); //Bind elements to be drawm
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW); 
 
-	glGenBuffers(1, ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	return;

@@ -1,5 +1,6 @@
 #include "include/functionality.h"
 
+unsigned int buffer, ibo;
 
 int main(void)
 {
@@ -22,6 +23,7 @@ int main(void)
 		std::cout << "Error" << std::endl;	
 
 	//functions called to buffer
+	glGenBuffers(1, &buffer); glGenBuffers(1, &ibo);
 	Buffered(&buffer, &ibo);
 	
 	printControls();
