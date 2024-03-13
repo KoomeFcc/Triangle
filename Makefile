@@ -6,6 +6,6 @@ glfw.o: glfw.cpp
 
 
 clean:
-	del glfw.o
+	del *.o
 
 
