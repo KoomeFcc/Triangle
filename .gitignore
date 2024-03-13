@@ -1,2 +1,2 @@
-glfw.exe
-glfw.o
+*.exe
+*.o
