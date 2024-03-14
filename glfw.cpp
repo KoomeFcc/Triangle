@@ -37,19 +37,12 @@ int main(void)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//glBegin(GL_TRIANGLES);
-
 		//glfwSetKeyCallback(window, Keypressed);
 		Keytest(window);
 
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-	
+		//GLClearError(); //check if error was raised during earlier function call
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-		//glVertex2f(-0.5f, -0.5f);
-		//glVertex2f(0.0f, 0.5f);
-		//glVertex2f(0.5f, -0.5f);
-
-		//glEnd();
+		//GLCheckError(); //check if error is raised during Draw call
 
 		glfwSwapBuffers(window);
 
@@ -57,7 +50,7 @@ int main(void)
 
 		Sleep(5);
 	}
-	//glDeleteProgram(Shader);
+	glDeleteProgram(Shader);
 	glfwTerminate();
 	return 0;
 } 

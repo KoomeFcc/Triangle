@@ -25,4 +25,5 @@ void Keypressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 void Buffered(unsigned int *buffer, unsigned int *ibo);
 void Keytest(GLFWwindow* window);
 void printControls();
-
+void GLClearError();
+void GLCheckError();

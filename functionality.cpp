@@ -89,6 +89,16 @@ void Keytest(GLFWwindow* window){
 	return;
 }
 
+void GLClearError(){
+	while(glGetError() != GL_NO_ERROR); //Call function until no error
+}
+
+void GLCheckError(){
+	while(GLenum error = glGetError()){
+		std::cout << "[OpenGl Error] (" << error << ")" << std::endl;
+	}
+}
+
 ShaderProgramSource ParseShader(const std::string& filepath){
 
 	std::ifstream stream(filepath);
