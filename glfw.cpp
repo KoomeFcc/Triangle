@@ -18,6 +18,7 @@ int main(void)
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 	if(glewInit() != GLEW_OK)
 		std::cout << "Error" << std::endl;	
@@ -33,22 +34,32 @@ int main(void)
 	unsigned int Shader = CreateShader(source.VertexSource, source.FragmentSource);
 	glUseProgram(Shader);
 
+	int location = glGetUniformLocation(Shader, "u_Color");
+	if (location == -1) std::cout << "[Uniform not finded]" << std::endl;
+	float r = 0.5f; float increment = 0.025f; //TODO: put changing coloring into function
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//glfwSetKeyCallback(window, Keypressed);
 		Keytest(window);
+		
+		glUniform4f(location, r, 0.1f, 0.3f, 1.0f); //defined the uniform
 
 		//GLClearError(); //check if error was raised during earlier function call
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		//GLCheckError(); //check if error is raised during Draw call
 
+		if (r > 1.0f) increment = -0.025f;
+		else if (r < 0.0f) increment = 0.025f;
+		r += increment;
+
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 
-		Sleep(5);
+		//Sleep(5);
 	}
 	glDeleteProgram(Shader);
 	glfwTerminate();

@@ -12,6 +12,9 @@ extern unsigned int buffer;
 extern unsigned int ibo;
 extern GLint size;
 extern GLint sizeibo;
+extern int location;
+extern float r;
+extern float increment;
 
 struct ShaderProgramSource{
 	std::string VertexSource;

@@ -21,7 +21,7 @@ void Buffered(unsigned int *buffer, unsigned int *ibo) {
 }
 
 void Keytest(GLFWwindow* window){
-
+//TODO: find function to make sin and cos operations to fix rotation
 	int k = GLFW_PRESS;
 	int keyu = glfwGetKey(window, GLFW_KEY_UP);
 	int keyd = glfwGetKey(window, GLFW_KEY_DOWN);
@@ -83,7 +83,6 @@ void Keytest(GLFWwindow* window){
 			positions[i + 1] = keyQ == k ? rota.y : rotb.y;	
 		}
 		Buffered(&buffer, &ibo);
-		Sleep(3);
 		return;
 	}
 	return;
