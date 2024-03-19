@@ -1,6 +1,6 @@
 #include "include/functionality.h"
 
-unsigned int buffer, ibo;
+unsigned int buffer, ibo, vao;
 
 int main(void)
 {
@@ -17,6 +17,10 @@ int main(void)
 		return -1;
 	}
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
@@ -24,8 +28,8 @@ int main(void)
 		std::cout << "Error" << std::endl;	
 
 	//functions called to buffer
-	glGenBuffers(1, &buffer); glGenBuffers(1, &ibo);
-	Buffered(&buffer, &ibo);
+	glGenBuffers(1, &buffer); glGenBuffers(1, &ibo); glGenVertexArrays(1, &vao);
+	Buffered(&buffer, &ibo, &vao);
 	
 	printControls();
 
@@ -36,6 +40,13 @@ int main(void)
 
 	int location = glGetUniformLocation(Shader, "u_Color");
 	if (location == -1) std::cout << "[Uniform not finded]" << std::endl;
+	glUniform4f(location, 0.8, 0.3f, 0.8f, 1.0f);
+
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	float r = 0.5f; float increment = 0.025f; //TODO: put changing coloring into function
 	
 	while (!glfwWindowShouldClose(window))
@@ -44,8 +55,12 @@ int main(void)
 
 		//glfwSetKeyCallback(window, Keypressed);
 		Keytest(window);
-		
+	
+		glUseProgram(Shader);
 		glUniform4f(location, r, 0.1f, 0.3f, 1.0f); //defined the uniform
+							    
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 		//GLClearError(); //check if error was raised during earlier function call
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

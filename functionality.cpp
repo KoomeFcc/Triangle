@@ -6,14 +6,16 @@ float positions[12] = {
 	0.5f, 0.5f,
 	-0.5f, 0.5f
 };
-unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 }; //unsigned int buffer; unsigned int ibo;
+unsigned int indices[] = { 0, 1, 2, 2, 3, 0 }; //unsigned int buffer; unsigned int ibo;
 
-void Buffered(unsigned int *buffer, unsigned int *ibo) {
+void Buffered(unsigned int *buffer, unsigned int *ibo, unsigned int *vao) {
 
+	glBindVertexArray(*vao);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, *buffer); //Bind elements to be drawm
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW); 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW); 
+	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0); //link buffer and vao
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
@@ -28,7 +30,7 @@ void Keytest(GLFWwindow* window){
 
 	if (keyu == GLFW_PRESS or keyd == GLFW_PRESS) {
 		for (int i = 1; i < 12; i += 2) positions[i] += keyu == k ? 0.024f : -0.024f;
-		Buffered(&buffer, &ibo);
+		Buffered(&buffer, &ibo, &vao);
 		return;
 	}
 
@@ -37,7 +39,7 @@ void Keytest(GLFWwindow* window){
 
 	if(keyr == GLFW_PRESS or keyl == GLFW_PRESS){
 		for (int i = 0; i < 12; i += 2) positions[i] += keyr == k ? 0.024f : -0.024f;
-		Buffered(&buffer, &ibo);
+		Buffered(&buffer, &ibo, &vao);
 		return;
 	}
 
@@ -51,7 +53,7 @@ void Keytest(GLFWwindow* window){
 			if (keyw == k) positions[i] *= 1.024f; 
 			if (keys == k) positions[i] *= 0.976f;
 		}
-		Buffered(&buffer, &ibo);
+		Buffered(&buffer, &ibo, &vao);
 		return;
 	}
 
@@ -61,7 +63,7 @@ void Keytest(GLFWwindow* window){
 	if( keya == GLFW_PRESS or keyD == GLFW_PRESS){
 	
 		positions[2] += keyD == k ? 0.024f : -0.024f;
-		Buffered(&buffer, &ibo);
+		Buffered(&buffer, &ibo, &vao);
 		return;
 	}
 
@@ -82,7 +84,7 @@ void Keytest(GLFWwindow* window){
 			positions[i] = keyQ == k ? rota.x : rotb.x;
 			positions[i + 1] = keyQ == k ? rota.y : rotb.y;	
 		}
-		Buffered(&buffer, &ibo);
+		Buffered(&buffer, &ibo, &vao);
 		return;
 	}
 	return;
