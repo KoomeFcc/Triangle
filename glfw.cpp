@@ -1,4 +1,6 @@
 #include "include/functionality.h"
+#include "include/VertexBuffer.h"
+#include "include/IndexBuffer.h"
 
 unsigned int buffer, ibo, vao;
 
@@ -27,9 +29,10 @@ int main(void)
 	if(glewInit() != GLEW_OK)
 		std::cout << "Error" << std::endl;	
 
-	//functions called to buffer
-	glGenBuffers(1, &buffer); glGenBuffers(1, &ibo); glGenVertexArrays(1, &vao);
-	Buffered(&buffer, &ibo, &vao);
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(&vao);
+	//Buffered(&buffer, &ibo, &vao);//replaced with class abstraction
+	VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 	
 	printControls();
 
