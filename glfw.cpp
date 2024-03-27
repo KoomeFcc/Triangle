@@ -31,9 +31,14 @@ int main(void)
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(&vao);
-	//Buffered(&buffer, &ibo, &vao);//replaced with class abstraction
+
 	VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-	
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0); 
+
+	IndexBuffer ib(indices, 6);
+
 	printControls();
 
 	ShaderProgramSource source = ParseShader("./res/shaders/Basic.shader");
@@ -63,7 +68,7 @@ int main(void)
 		glUniform4f(location, r, 0.1f, 0.3f, 1.0f); //defined the uniform
 							    
 		glBindVertexArray(vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		ib.Bind();
 
 		//GLClearError(); //check if error was raised during earlier function call
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
