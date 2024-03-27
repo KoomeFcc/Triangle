@@ -30,7 +30,7 @@ int main(void)
 		std::cout << "Error" << std::endl;	
 
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(&vao);
+	glBindVertexArray(vao);
 
 	VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
